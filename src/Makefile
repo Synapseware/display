@@ -76,7 +76,7 @@ OBJDIR = .
 
 
 # Shared source code
-LIBS_DIR = ../../libs
+LIBS_DIR = 
 
 
 # List C source files here. (C dependencies are automatically generated.)
@@ -94,7 +94,7 @@ CPPSRC =
 #     Even though the DOS/Win* filesystem matches both .s and .S the same,
 #     it will preserve the spelling of the filenames, and gcc itself does
 #     care about how the name is spelled on its command-line.
-ASRC = 
+ASRC = display_asm.S
 
 
 # Optimization level, can be [0, 1, 2, 3, s]. 
@@ -614,6 +614,7 @@ clean_list :
 	$(REMOVE) $(CPPSRC:%.cpp=$(OBJDIR)/%.o)
 	$(REMOVE) $(SRC:%.c=$(OBJDIR)/%.lst)
 	$(REMOVE) $(CPPSRC:%.cpp=$(OBJDIR)/%.lst)
+	$(REMOVE) $(ASRC:%.S=$(OBJDIR)/%.lst)
 	$(REMOVE) $(SRC:.c=.s)
 	$(REMOVE) $(SRC:.c=.d)
 	$(REMOVE) $(SRC:.c=.i)

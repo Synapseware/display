@@ -4,6 +4,8 @@
 volatile uint16_t	lastADC = 0;
 volatile uint8_t	tick	= 0;
 
+
+
 //-----------------------------------------------------------------------------
 // Configure the SPI device
 void ConfigureSPI(void)
@@ -120,7 +122,7 @@ void ConfigureTimer1(void)
 				(0<<TOIE1);
 
 	OCR1A	=	14400-1;
-	OCR1B	=	1440;
+	OCR1B	=	360;
 }
 
 
@@ -251,23 +253,16 @@ void InitializeDisplay(void)
 void UpdateDisplay(int data)
 {
 	char buff[4] = "xxxx";
+	uint8_t idx = 0;
 
-	if (data > 999)
-	{
-		utoa(data, buff, 10);
-	}
-	else if (data > 99)
-	{
-		utoa(data, &buff[1], 10);
-	}
-	else if (data > 9)
-	{
-		utoa(data, &buff[2], 10);
-	}
-	else
-	{
-		utoa(data, &buff[3], 10);
-	}
+	if (data < 10)
+		idx = 3;
+	else if (data < 100)
+		idx = 2;
+	else if (data < 1000)
+		idx = 1;
+
+	utoa(data, &buff[idx], 10);
 
 	// select the SS line
 	SPI_PORT &= ~(1<<SS);
@@ -322,16 +317,8 @@ int main(void)
 
 
 //-----------------------------------------------------------------------------
-// ADC conversion complete
-ISR(ADC_vect)
-{
-	// save the ADC reading
-	lastADC = ADC;
-}
-
-
-//-----------------------------------------------------------------------------
 // Timer0 compare A @ 100Hz
+/*
 ISR(TIMER0_COMPA_vect)
 {
 	static uint8_t delay = 0;
@@ -341,20 +328,4 @@ ISR(TIMER0_COMPA_vect)
 	tick = 1;
 	ADCSRA |= (1<<ADSC);
 }
-
-
-//-----------------------------------------------------------------------------
-// Timer1 compare A
-ISR(TIMER1_COMPA_vect)
-{
-	DBG_PORT |= (1<<DBG_LED);
-}
-
-
-//-----------------------------------------------------------------------------
-// Timer1 compare B
-ISR(TIMER1_COMPB_vect)
-{
-	// turn off the debug LED
-	DBG_PORT &= ~(1<<DBG_LED);
-}
+*/
