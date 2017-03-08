@@ -170,9 +170,10 @@ void ConfigureADC(void)
 {
 	power_adc_enable();
 
-	//ADMUX	|=	(0<<ADLAR);		// Right adjust result
 	SelectChannel(ADC_CHANNEL);
-	ADMUX	&= ~(1<<ADLAR);		// Right adjust result
+	ADMUX	|=	(0<<REFS1)	|	// AVcc with ext. cap @ Vref
+				(1<<REFS0)	|	// 
+				(0<<ADLAR);		// Right adjust result
 
 	ADCSRA	=	(1<<ADEN)	|	// ADC Enable
 				(0<<ADSC)	|	// 
