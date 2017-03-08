@@ -12,8 +12,8 @@ delay:		.zero 1
 
 ;------------------------------------------------------------------------------
 ; extern's from the rest of the program
-.extern lastADC
-.extern tick
+.extern lastADC								; 16 bit value
+.extern tick								; 8 bit value
 
 
 ;------------------------------------------------------------------------------
@@ -21,16 +21,19 @@ delay:		.zero 1
 .global ADC_vect
 
 	ADC_vect:
-		IN		r25,_SFR_IO_ADDR(SREG)
-		PUSH	r25
+		IN		r24, _SFR_IO_ADDR(SREG)
+		PUSH	r24
 
-		LDS		r24,_SFR_IO_ADDR(ADCL)		; read ADCL first
-		LDS		r25,_SFR_IO_ADDR(ADCH)		; read ADCH last
-		STS		lastADC+1,r25
-		STS		lastADC,r24
+		LDS		r24, _SFR_IO_ADDR(ADCL)		; read ADCL first
+		LDS		r25, _SFR_IO_ADDR(ADCH)		; read ADCH last
+		STS		lastADC+1, r25
+		STS		lastADC, r24
 
-		POP		r25
-		OUT		_SFR_IO_ADDR(SREG),r25
+		; turn off the alternate LED
+		CBI		_SFR_IO_ADDR(DBG_PORT), (1<<DBG_LED_ALT)
+
+		POP		r24
+		OUT		_SFR_IO_ADDR(SREG), r24
 		reti
 
 
@@ -57,6 +60,9 @@ delay:		.zero 1
 		LDS		r24, _SFR_IO_ADDR(ADCSRA)	; start an ADC conversion
 		ORI		r24, (1<<ADSC)
 		STS		_SFR_IO_ADDR(ADCSRA), r24
+
+		; turn on the alternate LED
+		SBI		_SFR_IO_ADDR(DBG_PORT), (1<<DBG_LED_ALT)
 
 	TIMER0_COMPA_vect_01:
 		POP		r24

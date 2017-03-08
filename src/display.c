@@ -291,7 +291,8 @@ void init(void)
 
 	sei();
 
-	DBG_DDR |= (1<<DBG_LED);
+	// setup debug LEDs
+	DBG_DDR |= (1<<DBG_LED) | (1<<DBG_LED_ALT);
 
 	InitializeDisplay();
 }
