@@ -14,6 +14,7 @@
 
 #define ADC_CHANNEL		0
 
+#define DBG_LED_ALT		PB1
 #define DBG_LED			PB0
 #define DBG_PORT		PORTB
 #define DBG_PIN			PINB
