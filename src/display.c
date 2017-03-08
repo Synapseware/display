@@ -5,7 +5,6 @@ volatile uint16_t	lastADC = 0;
 volatile uint8_t	tick	= 0;
 
 
-
 //-----------------------------------------------------------------------------
 // Configure the SPI device
 void ConfigureSPI(void)
@@ -171,9 +170,9 @@ void ConfigureADC(void)
 {
 	power_adc_enable();
 
-	ADMUX	|=	(0<<ADLAR);		// Right adjust result
-
+	//ADMUX	|=	(0<<ADLAR);		// Right adjust result
 	SelectChannel(ADC_CHANNEL);
+	ADMUX	&= ~(1<<ADLAR);		// Right adjust result
 
 	ADCSRA	=	(1<<ADEN)	|	// ADC Enable
 				(0<<ADSC)	|	// 
@@ -294,6 +293,9 @@ void init(void)
 	// setup debug LEDs
 	DBG_DDR |= (1<<DBG_LED) | (1<<DBG_LED_ALT);
 
+	// ensure that the debug LEDs are off
+	DBG_PORT &= ~((1<<DBG_LED) | (1<<DBG_LED_ALT));
+
 	InitializeDisplay();
 }
 
@@ -315,18 +317,3 @@ int main(void)
 		}
 	}
 }
-
-
-//-----------------------------------------------------------------------------
-// Timer0 compare A @ 100Hz
-/*
-ISR(TIMER0_COMPA_vect)
-{
-	static uint8_t delay = 0;
-	if (++delay < 25)
-		return;
-	delay = 0;
-	tick = 1;
-	ADCSRA |= (1<<ADSC);
-}
-*/
