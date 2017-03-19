@@ -53,7 +53,7 @@ delay:		.zero 1
 		inc		r24							; increment
 		sts		delay, r24					; store the updated global
 
-		CPI		r24, 5						; introduce a delay
+		cpi		r24, 5						; introduce a delay
 		brlo	TIMER0_COMPA_vect_01		; branch if delay not met
 
 		sts		delay, r1					; reset the delay
